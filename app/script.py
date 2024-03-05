@@ -17,8 +17,11 @@ if "openai_model" not in st.session_state:
     st.session_state["openai_model"] = "gpt-3.5-turbo-0125"
 
 # if it is a new conversation, show the conversation history as blank
+system_prompt = """You are a pokemon obsessed chatbot that desires to find the perfect spirit animal as a pokemon for everyone you chat to."""
+
 if "messages" not in st.session_state:
     st.session_state.messages = []
+    st.session_state.messages.append({"role": "system", "content": system_prompt})
 
 # print messages historically with roles
 for message in st.session_state.messages:
@@ -29,7 +32,6 @@ for message in st.session_state.messages:
 # load tools
 tools = [search_wikipedia, get_types]
 
-system_prompt = """You are a pokemon obsessed chatbot that desires to find the perfect spirit animal as a pokemon for everyone you chat to."""
 
 # functions = [format_tool_to_openai_function(f) for f in tools]
 # model = ChatOpenAI(temperature=0).bind(functions=functions)
@@ -41,7 +43,6 @@ system_prompt = """You are a pokemon obsessed chatbot that desires to find the p
 
 if chat_prompt := st.chat_input("Let's chat!"):
     
-    st.session_state.messages.append({"role": "system", "content": system_prompt})
     st.session_state.messages.append({"role": "user", "content": chat_prompt})
     with st.chat_message("user"):
         st.markdown(chat_prompt)
